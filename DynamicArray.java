@@ -62,34 +62,91 @@ public class DynamicArray {
      * @return -1 if string not present, otherwise underlying array position of
      *         first occurrence of string.
      */
+
+     /**
+      * Returns the inde of the first occurence of a string in the array 
+      * Uses a while-loop to stop early when the targer is found 
+      * This is to avoid unecessary iterations 
+      */
+
     public int indexOf(String string) {
-        return -1234;
+        int i = 0; 
+        boolean found = false; 
+        while (i < this.occupancy && !found) { 
+            found = string.equals(this.underlying[i]);
+            if (!found) i++; 
+        }
+        return found ? i : -1;  
     } // method indexOf
 
     /** Method to tell if a string exists in the underlying array */
+    /**
+     * Determines if a string exists in the array 
+     * Simply calls indexOf which avoids double codes
+     */
     public boolean contains(String string) {
-        return false;
+        return this.indexOf(string) > -1; 
     }
 
     /** Method to count how many times a string appears in the underlying array*/
+    /**
+     * Counts how many times the given string appears in the array
+     * Traverse only up to occupancy which avoids searching unused slots 
+     */
     public int countOf(String string) {
-        return -1234;
+        int count = 0; 
+        for (int i = 0; i < this.occupancy; i++) { 
+            if (string.equals(this.underlying[i])) {
+                count++; 
+            }
+        }
+        return count; 
     }
 
     /** method to remove items from the underlying array */
+    /**
+     * Removes and reurns the string at a given index 
+     * Shifts all later elements left by one to close the gap 
+     * Ensures no dangling values; adjusts occupancy accordingly 
+     * Includes guard clause for invalid index 
+     */
     public String remove(int index) {
-        return "James on the street talking trash about your hotel";
+        if (index < 0 || index >= this.occupancy) return null; 
+        String removed = this.underlying[index]; 
+        for (int i = index; i < this.occupancy - 1; i++) {
+            this.underlying[i] = this.underlying[i + 1]; 
+        }
+        this.underlying[this.occupancy - 1] = null; 
+        this.occupancy--; 
+        return removed; 
     }
 
     /** overload remove */ 
+    /**
+     * Removes the firs occurence of the specified string from the array
+     * Uses indexOf + remove(int) 
+     */
     public String remove(String string) {
-        return "James on the street talking trash about your hotel";
+        int index = this.indexOf(string); 
+        if (index > -1) {
+            return this.remove(index); 
+        }
+        return null; 
     }
 
     /** Complete this method */
+    /**
+     * Returns a comma separated list of strings currently in the array 
+     * Does not print unused nulls
+     * Handles empty arrays easily 
+     */
     public String toString() {
-        return "to be done shortly"; // blatant violation of magic values clause
-                                     // serves as reminder to finish this method
+        if (this.occupancy == 0) return "[empty]"; 
+        String result = this.underlying[0]; 
+        for (int i = 1; i < this.occupancy; i++) { 
+            result += ", " + this.underlying[i]; 
+        }
+        return "[" + result + "]"; 
     }
 
 } // class DynamicArray
